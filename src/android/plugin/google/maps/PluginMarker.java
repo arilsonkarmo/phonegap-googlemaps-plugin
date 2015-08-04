@@ -667,7 +667,7 @@ public class PluginMarker extends MyPlugin {
       iconUrl = "./" + iconUrl;
     }
     if (iconUrl.indexOf("./") == 0) {
-      String currentPage = this.webView.getUrl();
+      String currentPage = "file:///android_asset/www/";
       currentPage = currentPage.replaceAll("[^\\/]*$", "");
       iconUrl = iconUrl.replace("./", currentPage);
     }
@@ -685,6 +685,10 @@ public class PluginMarker extends MyPlugin {
         @Override
         protected Bitmap doInBackground(Void... params) {
           String iconUrl = iconProperty.getString("url");
+          String currentPage = "file:///android_asset/www/";
+          currentPage = currentPage.replaceAll("[^\\/]*$", "");
+          iconUrl = currentPage + iconUrl;
+
           
           Bitmap image = null;
           if (iconUrl.indexOf("cdvfile://") == 0) {
@@ -701,6 +705,7 @@ public class PluginMarker extends MyPlugin {
             File tmp = new File(iconUrl);
             if (tmp.exists()) {
               image = BitmapFactory.decodeFile(iconUrl);
+
             } else {
               if (PluginMarker.this.mapCtrl.isDebug) {
                 Log.w("GoogleMaps", "icon is not found (" + iconUrl + ")");
@@ -713,7 +718,8 @@ public class PluginMarker extends MyPlugin {
             if (iconUrl.indexOf("./") == 0) {
               iconUrl = iconUrl.replace("./", "www/");
             }
-            AssetManager assetManager = PluginMarker.this.cordova.getActivity().getAssets();
+            AssetManager assetManager = PluginMarker.this.mapCtrl.cordova.getActivity().getAssets();
+
             InputStream inputStream;
             try {
               inputStream = assetManager.open(iconUrl);
